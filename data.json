@@ -15,6 +15,23 @@
                     "tasks": []
                 }
             ]
+        },
+        {
+            "id": 3,
+            "name": "Elvis",
+            "projects": [
+                {
+                    "id": 2,
+                    "title": "CLI Tool",
+                    "tasks": [
+                        {
+                            "id": 1,
+                            "title": "Build parser",
+                            "completed": false
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
