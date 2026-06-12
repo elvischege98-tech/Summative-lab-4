@@ -4,6 +4,17 @@
             "id": 1,
             "name": "Alex",
             "projects": []
+        },
+        {
+            "id": 2,
+            "name": "Sam",
+            "projects": [
+                {
+                    "id": 1,
+                    "title": "CLI Tool",
+                    "tasks": []
+                }
+            ]
         }
     ]
 }
