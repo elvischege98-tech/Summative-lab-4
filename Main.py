@@ -1,9 +1,12 @@
 import argparse
-from Models import User, Project, Task
+from Models.models import User, Project, Task
+from Models.Storage import save_data, load_data
 
 # In-memory storage
 USERS = []
 
+# Load existing data
+USERS = load_data()
 
 # ==========================
 # User Actions
@@ -12,6 +15,7 @@ USERS = []
 def add_user(name):
     user = User(name)
     USERS.append(user)
+    save_data(USERS)
     print(f"User '{name}' created successfully.")
 
 
@@ -33,7 +37,7 @@ def add_project(user_name, title):
         if user.name == user_name:
             project = Project(title)
             user.add_project(project)
-
+            save_data(USERS)
             print(f"Project '{title}' added to {user_name}")
             return
 
@@ -74,6 +78,7 @@ def add_task(user_name, project_title, task_title):
                     project.add_task(task)
 
                     print(f"Task '{task_title}' added.")
+                    save_data(USERS)
                     return
 
     print("Project not found.")
@@ -115,6 +120,7 @@ def complete_task(user_name, project_title, task_id):
 
                     if task:
                         task.mark_complete()
+                        save_data(USERS)
                         print("Task completed.")
                         return
 
