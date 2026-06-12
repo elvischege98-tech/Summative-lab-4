@@ -1,6 +1,10 @@
 import argparse
 from Models.models import User, Project, Task
 from Models.Storage import save_data, load_data
+from rich.console import Console
+from rich.table import Table
+
+console = Console()
 
 # In-memory storage
 USERS = []
