@@ -1,4 +1,4 @@
-##PROJECT: CLI PROJECT MANAGEMENT TOOL
+PROJECT: CLI PROJECT MANAGEMENT TOOL
 
 --------------------------------------------------
 DESCRIPTION
