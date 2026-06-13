@@ -3,6 +3,7 @@ from Models.models import User, Project, Task
 from Models.Storage import save_data, load_data
 from rich.console import Console
 from rich.table import Table
+from rich import box
 
 console = Console()
 
@@ -12,9 +13,7 @@ USERS = []
 # Load existing data
 USERS = load_data()
 
-# ==========================
 # User Actions
-# ==========================
 
 def add_user(name):
     user = User(name)
@@ -22,19 +21,21 @@ def add_user(name):
     save_data(USERS)
     print(f"User '{name}' created successfully.")
 
-
 def list_users():
     if not USERS:
-        print("No users found.")
+        console.print("[red]No users found.[/red]")
         return
 
+    table = Table(title="Users", box=box.ROUNDED)
+
+    table.add_column("Name", style="cyan")
+
     for user in USERS:
-        print(user)
+        table.add_row(user.name)
 
+    console.print(table)
 
-# ==========================
 # Project Actions
-# ==========================
 
 def add_project(user_name, title):
     for user in USERS:
@@ -53,20 +54,22 @@ def list_projects(user_name):
         if user.name == user_name:
 
             if not user.projects:
-                print("No projects found.")
+                console.print("[red]No projects found.[/red]")
                 return
 
-            for project in user.projects:
-                print(project)
+            table = Table(title=f"Projects of {user_name}", box=box.ROUNDED)
 
+            table.add_column("Title", style="yellow")
+
+            for project in user.projects:
+                table.add_row(project.title)
+
+            console.print(table)
             return
 
-    print("User not found.")
+    console.print("[red]User not found.[/red]")
 
-
-# ==========================
 # Task Actions
-# ==========================
 
 def add_task(user_name, project_title, task_title):
 
@@ -87,28 +90,31 @@ def add_task(user_name, project_title, task_title):
 
     print("Project not found.")
 
-
 def list_tasks(user_name, project_title):
-
     for user in USERS:
-
         if user.name == user_name:
 
             for project in user.projects:
-
                 if project.title == project_title:
 
                     if not project.tasks:
-                        print("No tasks found.")
+                        console.print("[red]No tasks found.[/red]")
                         return
 
-                    for task in project.tasks:
-                        print(task)
+                    table = Table(title=f"Tasks in {project_title}", box=box.SIMPLE_HEAVY)
 
+                    table.add_column("ID", style="cyan", justify="right")
+                    table.add_column("Task", style="white")
+                    table.add_column("Status", style="green")
+
+                    for i, task in enumerate(project.tasks):
+                        status = "✔ Done" if getattr(task, "completed", False) else "✘ Pending"
+                        table.add_row(str(i), task.title, status)
+
+                    console.print(table)
                     return
 
-    print("Project not found.")
-
+    console.print("[red]Project not found.[/red]")
 
 def complete_task(user_name, project_title, task_id):
 
@@ -133,10 +139,40 @@ def complete_task(user_name, project_title, task_id):
 
     print("Project not found.")
 
+#View all users
+# View / Display Actions
 
-# ==========================
+from rich.tree import Tree
+
+def show_all():
+    if not USERS:
+        console.print("[red]No data found.[/red]")
+        return
+
+    tree = Tree("📦 [bold cyan]All Users[/bold cyan]")
+
+    for user in USERS:
+        user_branch = tree.add(f"👤 [bold]{user.name}[/bold]")
+
+        if not user.projects:
+            user_branch.add("[dim]No projects[/dim]")
+            continue
+
+        for project in user.projects:
+            project_branch = user_branch.add(f"📁 [yellow]{project.title}[/yellow]")
+
+            if not project.tasks:
+                project_branch.add("[dim]No tasks[/dim]")
+                continue
+
+            for task in project.tasks:
+                completed = getattr(task, "completed", False)
+                status = "[green]✔[/green]" if completed else "[red]✘[/red]"
+                project_branch.add(f"{status} {task.title}")
+
+    console.print(tree)
+
 # CLI
-# ==========================
 
 def main():
     parser = argparse.ArgumentParser(
@@ -145,7 +181,7 @@ def main():
 
     subparsers = parser.add_subparsers(dest="command")
 
-    # ---------- User Commands ----------
+    #  User Commands 
 
     add_user_cmd = subparsers.add_parser(
         "add-user",
@@ -162,7 +198,7 @@ def main():
         help="List all users"
     )
 
-    # ---------- Project Commands ----------
+    #  Project Commands 
 
     add_project_cmd = subparsers.add_parser(
         "add-project",
@@ -189,7 +225,7 @@ def main():
         help="User name"
     )
 
-    # ---------- Task Commands ----------
+    # Task Commands 
 
     add_task_cmd = subparsers.add_parser(
         "add-task",
@@ -239,9 +275,14 @@ def main():
         required=True
     )
 
+    show_all_cmd = subparsers.add_parser(
+        "show-all",
+        help="Show all users, projects, and tasks"
+    )
+
     args = parser.parse_args()
 
-    # ---------- Command Router ----------
+    #  Command Router 
 
     if args.command == "add-user":
         add_user(args.name)
@@ -263,7 +304,8 @@ def main():
 
     elif args.command == "complete-task":
         complete_task(args.user, args.project, args.id)
-
+    elif args.command == "show-all":
+        show_all()    
     else:
         parser.print_help()
 
