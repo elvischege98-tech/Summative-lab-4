@@ -32,22 +32,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "id": 4,
-            "name": "Elvis",
-            "projects": []
-        },
-        {
-            "id": 5,
-            "name": "Rose",
-            "projects": [
-                {
-                    "id": 3,
-                    "title": "Go out",
-                    "tasks": []
-                }
-            ]
         }
     ]
 }
