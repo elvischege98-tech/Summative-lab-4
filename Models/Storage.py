@@ -1,7 +1,7 @@
-import json
-from Models import User, Project, Task
+import json #Python tool for working with JSON data
+from Models import User, Project, Task #Importing because JSON cannot store python ojects
 
-DATA_FILE = "data.json"
+DATA_FILE = "data.json" #File name for storing data
 
 def save_data(users):
     data = {
@@ -9,8 +9,8 @@ def save_data(users):
     }
 
     with open(DATA_FILE, "w") as file:
-        json.dump(data, file, indent=4)
-
+        json.dump(data, file, indent=4) #Converts python objects to JSON and saves to file /indent=4 makes it readable with 4 spaces indentation
+#Indent=4 ives indentation from 1 to 4 format
 def load_data():
     try:
         with open(DATA_FILE, "r") as file:
@@ -19,8 +19,7 @@ def load_data():
     except (FileNotFoundError, json.JSONDecodeError):
         return {"users": []}
 
-    # SAFETY CHECK (IMPORTANT)
-    if "users" not in data:
+    if "users" not in data: #If JSON is missing users key, initialize it to an empty list
         data["users"] = []
 
     users = []

@@ -12,19 +12,19 @@ class Person:
             raise ValueError("Name cannot be empty")
         self._name = value
 
-    def __str__(self):
+    def __str__(self):     #prints Sam instead of <__main__.User object at 0x1234>
         return f"{self.name}"
     
 
 class Task:
-    _id_counter = 1
+    _id_counter = 1  #A counter variable to assign unique IDs to tasks
 
     def __init__(self, title):
         self.id = Task._id_counter
         Task._id_counter += 1
 
         self._title = title
-        self._completed = False
+        self._completed = False #To show new tasks as incomplete by default
 
     @property
     def title(self):
@@ -37,12 +37,12 @@ class Task:
     def mark_complete(self):
         self._completed = True
 
-    def __repr__(self):
+    def __repr__(self): #Concerts to string when printed in lists, shows status and title instead of <__main__.Task object at 0x1234>
         status = "✔" if self.completed else "✘"
         return f"[{status}] Task({self.id}): {self.title}"
     
 
-    def to_dict(self):
+    def to_dict(self): #Converts to JSON(Javascript object notation) python does not understand
         return {
             "id": self.id,
             "title": self.title,
@@ -50,7 +50,7 @@ class Task:
         }
     
 class Project:
-    _id_counter = 1
+    _id_counter = 1  #A counter variable to assign unique IDs to projects
 
     def __init__(self, title):
         self.id = Project._id_counter
